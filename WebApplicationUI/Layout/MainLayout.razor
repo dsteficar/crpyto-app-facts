@@ -1,0 +1,35 @@
+﻿@using WebApplicationUI.Common.AppTheme
+@inherits LayoutComponentBase
+
+@inject AppTheme AppTheme
+@inject ThemeService RadzenThemeService
+
+<div class="page">
+    <NavMenu />
+        <main>
+@*             <div class="top-row px-4 layout-header">
+                <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
+            </div> *@
+
+            <article class="content px-4">
+                @Body
+            </article>
+        </main>
+</div>
+
+@code{
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            AppTheme.IsDarkMode = await AppTheme.IsBrowserDarkMode();
+            await AppTheme.ListenForThemeChanges();
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        AppTheme.OnChange += StateHasChanged;
+    }
+}
+

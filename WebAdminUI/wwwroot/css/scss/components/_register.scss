@@ -1,0 +1,110 @@
+﻿.register-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f5f5f5;
+    background-image: url('/images/adminpanel-background.jpg');
+    background-size: cover;
+    background-position: center;
+
+
+    .register-card {
+        background-color: #0d1114;
+        padding: 2rem;
+        border-radius: 10px;
+        box-shadow: 0 0 8px rgb(255 255 255);
+        width: 100%;
+        max-width: 400px;
+        margin: 5%;
+    }
+
+    .register-form-label .rz-form-field-label {
+        color: #8a99a1;
+    }
+
+    .form-control:focus {
+        background-color: #0d1114 !important;
+        border-color: #ffcfc1 !important;
+        outline: 0;
+        box-shadow: 0 0 0 0.2rem rgba(255, 109, 65, 0.25);
+    }
+
+    .rz-textbox:focus ~ .rz-form-field-label, .rz-textarea:focus ~ .rz-form-field-label, .rz-spinner:focus-within ~ .rz-form-field-label, .rz-autocomplete:focus-within ~ .rz-form-field-label {
+        color: #4f96c2 !important;
+    }
+
+    .rz-state-focused .rz-form-field-label, .rz-variant-filled.rz-state-focused .rz-form-field-label, .rz-variant-flat.rz-state-focused .rz-form-field-label {
+        color: #3a474d;
+    }
+
+    .valid.modified:not([type=checkbox]) {
+        outline: 0px solid #33688c;
+    }
+
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover,
+    input:-webkit-autofill:focus,
+    textarea:-webkit-autofill,
+    textarea:-webkit-autofill:hover,
+    textarea:-webkit-autofill:focus,
+    select:-webkit-autofill,
+    select:-webkit-autofill:hover,
+    select:-webkit-autofill:focus {
+        border: 3px solid #0d1114 !important;
+        -webkit-text-fill-color: #ffffff !important;
+        -webkit-box-shadow: 0 0 0px 1000px #0d1114 inset !important;
+        transition: background-color 5000s ease-in-out 0s !important;
+    }
+
+    .register-header {
+        color: #ffffff;
+        text-align: center;
+    }
+
+    .icon-account {
+        color: #4f96c2 !important;
+        margin-right: 0.25em;
+    }
+
+    .icon-password {
+        color: #4f96c2 !important;
+        padding-top: 10px;
+    }
+
+    .button-submit {
+        width: 100%;
+        color: #ffffff;
+        background-color: #33688c !important;
+    }
+
+    .form-control-login {
+        color: #ffffff !important;
+    }
+
+    .validator-helper {
+        color: #4f96c2;
+        padding-top: 10px;
+    }
+
+    .rz-alert.rz-warning.rz-shade-lighter {
+        --rz-alert-background-color: rgb(107 42 47) !important;
+        --rz-alert-color: #ffffff !important;
+        --rz-alert-title-color: #b12c2c !important;
+        --rz-alert-icon-color: #ff0000 !important;
+    }
+
+    .register-user-icon {
+        width: 100px;
+        height: 100px;
+    }
+
+    .register-subtitle {
+        color: #58606b;
+        text-align: center;
+    }
+
+    .register-login-link {
+        color: #58606b;
+    }
+}

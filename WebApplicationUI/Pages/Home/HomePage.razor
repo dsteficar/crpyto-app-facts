@@ -1,0 +1,34 @@
+﻿@page "/home"
+@page "/"
+
+@using WebApplicationUI.Common.AppTheme
+
+@inject AppTheme theme
+
+<h1>Hello @(theme.IsDarkMode ? "dark" : "light") theme</h1>
+<button @onclick="ToggleTheme">Toggle theme</button>
+
+<PageTitle>Home</PageTitle>
+
+@code{
+
+    // protected override async Task OnAfterRenderAsync(bool firstRender)
+    // {
+    //     if (firstRender)
+    //     {
+    //         theme.IsDarkMode = await theme.IsBrowserDarkMode();
+    //         await theme.ListenForThemeChanges();
+    //     }
+    // }
+
+    // protected override void OnInitialized()
+    // {
+    //     theme.OnChange += StateHasChanged;
+    // }
+
+    void ToggleTheme()
+    {
+        theme.IsDarkMode = !theme.IsDarkMode;
+    }
+
+}

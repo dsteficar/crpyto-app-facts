@@ -1,0 +1,132 @@
+﻿@page "/register"
+
+@using Application.Contracts.Services
+@using Application.DTOs.Account.Requests
+@using WebAdminUI.Components.Layout
+@using System.Net
+@using WebAdminUI.Models.Account
+
+@inject IAccountService AccountService
+@inject NavigationManager NavManager
+
+@rendermode InteractiveServer
+
+@layout NoLayout
+
+<link href="css/main.css" rel="stylesheet">
+
+<div class="register-container">
+    <div class="register-card">
+        <div class="rz-p-2">
+            <RadzenText TextStyle="TextStyle.H6" TagName="TagName.P" class="register-header">Administration</RadzenText>
+            <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.P" class="register-subtitle">Register your admin account</RadzenText>
+        </div>
+        <RadzenStack AlignItems="AlignItems.Center" Style="margin-bottom: -2rem;">
+            <RadzenImage Path="images/icons/login-user-icon.png" class="register-user-icon" AlternateText="Register User Icon" />
+        </RadzenStack>
+        <RadzenTemplateForm Data="@registerModel" TItem="RegisterAdminModel" Submit="@HandleAccountRegister">
+            <RadzenStack Gap="1rem" class="rz-p-sm-12">
+                <RadzenFormField Text="Name" Variant="Variant.Text" class="register-form-label">
+                    <ChildContent>
+                        <RadzenTextBox Name="Name" @bind-Value="@registerModel.Name" class="form-control form-control-login" Placeholder="Enter your name" />
+                    </ChildContent>
+                </RadzenFormField>
+                <RadzenFormField Text="Email" Variant="Variant.Text" class="register-form-label">
+                    <ChildContent>
+                        <RadzenTextBox Name="EmailAddress" @bind-Value="@registerModel.EmailAddress" class="form-control form-control-login" Placeholder="Enter your username" />
+                    </ChildContent>
+                    <End>
+                        <RadzenIcon Icon="account_circle" class="icon-account" />
+                    </End>
+                    <Helper>
+                        <RadzenRequiredValidator Component="EmailAddress" Text="@emailReqValidationMessage" class="validator-helper" />
+                        <RadzenRegexValidator Component="EmailAddress" Pattern="@emailRegex" Text="@emailRgxValidationMessage" class="validator-helper" />
+                    </Helper>
+                </RadzenFormField>
+                <RadzenFormField Text="Password" Variant="Variant.Text" class="register-form-label">
+                    <ChildContent>
+                        <RadzenPassword Name="Password" @bind-Value="registerModel.Password" Placeholder="Enter your password" class="form-control form-control-login" Visible="@hidePassword" />
+                        <RadzenTextBox Name="Password" @bind-Value="@registerModel.Password" Visible="@(!hidePassword)" class="form-control form-control-login" />
+                    </ChildContent>
+                    <End>
+                        <RadzenButton Icon="@(hidePassword ? "visibility" : "visibility_off")" Click="TogglePassword" Variant="Variant.Text" Size="ButtonSize.Small" class="icon-password" />
+                    </End>
+                    <Helper>
+                        <RadzenRequiredValidator Component="Password" Text="@passwordReqValidationMessage" class="validator-helper" />
+                        <RadzenRegexValidator Component="Password" Pattern="@passwordRegex" Text="@passwordRgxValidationMessage" class="validator-helper" />
+                    </Helper>
+                </RadzenFormField>
+                <RadzenFormField Text="Password confirm" Variant="Variant.Text" class="register-form-label">
+                    <ChildContent>
+                        <RadzenPassword Name="ConfirmPassword" @bind-Value="registerModel.ConfirmPassword" Placeholder="Enter and confirm your password" class="form-control form-control-login" Visible="@hideConfirmPassword" />
+                        <RadzenTextBox Name="ConfirmPassword" @bind-Value="@registerModel.ConfirmPassword" Visible="@(!hideConfirmPassword)" class="form-control form-control-login" />
+                    </ChildContent>
+                    <End>
+                        <RadzenButton Icon="@(hideConfirmPassword ? "visibility" : "visibility_off")" Click="ToggleConfirmPassword" Variant="Variant.Text" Size="ButtonSize.Small" class="icon-password" />
+                    </End>
+                    <Helper>
+                        <RadzenRequiredValidator Component="ConfirmPassword" Text="@passwordReqValidationMessage" class="validator-helper" />
+                        <RadzenCompareValidator Component="ConfirmPassword" Value="@registerModel.Password" Operator="CompareOperator.Equal" Text="Passwords do not match" class="validator-helper" />
+                    </Helper>
+                </RadzenFormField>
+                <RadzenAlert AlertStyle="AlertStyle.Warning" Variant="Variant.Flat" Shade="Shade.Lighter" @bind-Visible="showAlertMessage">
+                    @errorMessage
+                </RadzenAlert>
+                <RadzenButton ButtonType="ButtonType.Submit" Text="Register" class="button-submit" />
+                <div class="register-login-link text-center mt-3">
+                    Already have an account?
+                    <RadzenLink Path="/login" Text="Sign in" />
+                </div>
+            </RadzenStack>
+        </RadzenTemplateForm>
+    </div>
+</div>
+
+@code {
+    RegisterAdminModel registerModel = new();
+
+    private string emailRegex = "[^@ \\t\\r\\n]+@[^@ \\t\\r\\n]+\\.[^@ \\t\\r\\n)]+";
+    private string passwordRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^\\da-zA-Z]).{8,15}$";
+
+    private bool hidePassword = true;
+    private bool hideConfirmPassword = true;
+    private bool showAlertMessage = false;
+
+    private string passwordRgxValidationMessage = "Password must be between 8 and 15 characters and contain at least one lowercase letter, one uppercase letter, one numeric digit, and one special character";
+    private string emailRgxValidationMessage = "Invalid Email Address format.";
+    private string passwordReqValidationMessage = "Password is required!";
+    private string emailReqValidationMessage = "Email address is required!";
+    private string errorMessage = string.Empty;
+
+    async Task HandleAccountRegister()
+    {
+        var registerResult = await AccountService.RegisterAsync(registerModel.EmailAddress, registerModel.Password, registerModel.Name);
+
+        if (!registerResult.IsSuccess)
+        {
+            await jsRuntime.InvokeVoidAsync("alert", "Registration failed.");
+            return;
+        }
+
+        await jsRuntime.InvokeVoidAsync("alert", "Registration succesfull.");
+        registerModel = new();
+
+        NavManager.NavigateTo("/login");
+    }
+
+
+    private void TogglePassword()
+    {
+        hidePassword = !hidePassword;
+    }
+
+    private void ToggleConfirmPassword()
+    {
+        hideConfirmPassword = !hideConfirmPassword;
+    }
+
+    private async Task ShowErrorMessage(string message)
+    {
+        await jsRuntime.InvokeVoidAsync("alert", message);
+    }
+}

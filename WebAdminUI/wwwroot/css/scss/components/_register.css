@@ -1,0 +1,92 @@
+﻿.register-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f5f5f5;
+  background-image: url("/images/adminpanel-background.jpg");
+  background-size: cover;
+  background-position: center;
+}
+.register-container .register-card {
+  background-color: #0d1114;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 0 8px rgb(255, 255, 255);
+  width: 100%;
+  max-width: 400px;
+  margin: 5%;
+}
+.register-container .register-form-label .rz-form-field-label {
+  color: #8a99a1;
+}
+.register-container .form-control:focus {
+  background-color: #0d1114 !important;
+  border-color: #ffcfc1 !important;
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem rgba(255, 109, 65, 0.25);
+}
+.register-container .rz-textbox:focus ~ .rz-form-field-label, .register-container .rz-textarea:focus ~ .rz-form-field-label, .register-container .rz-spinner:focus-within ~ .rz-form-field-label, .register-container .rz-autocomplete:focus-within ~ .rz-form-field-label {
+  color: #4f96c2 !important;
+}
+.register-container .rz-state-focused .rz-form-field-label, .register-container .rz-variant-filled.rz-state-focused .rz-form-field-label, .register-container .rz-variant-flat.rz-state-focused .rz-form-field-label {
+  color: #3a474d;
+}
+.register-container .valid.modified:not([type=checkbox]) {
+  outline: 0px solid #33688c;
+}
+.register-container input:-webkit-autofill,
+.register-container input:-webkit-autofill:hover,
+.register-container input:-webkit-autofill:focus,
+.register-container textarea:-webkit-autofill,
+.register-container textarea:-webkit-autofill:hover,
+.register-container textarea:-webkit-autofill:focus,
+.register-container select:-webkit-autofill,
+.register-container select:-webkit-autofill:hover,
+.register-container select:-webkit-autofill:focus {
+  border: 3px solid #0d1114 !important;
+  -webkit-text-fill-color: #ffffff !important;
+  -webkit-box-shadow: 0 0 0px 1000px #0d1114 inset !important;
+  transition: background-color 5000s ease-in-out 0s !important;
+}
+.register-container .register-header {
+  color: #ffffff;
+  text-align: center;
+}
+.register-container .icon-account {
+  color: #4f96c2 !important;
+  margin-right: 0.25em;
+}
+.register-container .icon-password {
+  color: #4f96c2 !important;
+  padding-top: 10px;
+}
+.register-container .button-submit {
+  width: 100%;
+  color: #ffffff;
+  background-color: #33688c !important;
+}
+.register-container .form-control-login {
+  color: #ffffff !important;
+}
+.register-container .validator-helper {
+  color: #4f96c2;
+  padding-top: 10px;
+}
+.register-container .rz-alert.rz-warning.rz-shade-lighter {
+  --rz-alert-background-color: rgb(107 42 47) !important;
+  --rz-alert-color: #ffffff !important;
+  --rz-alert-title-color: #b12c2c !important;
+  --rz-alert-icon-color: #ff0000 !important;
+}
+.register-container .register-user-icon {
+  width: 100px;
+  height: 100px;
+}
+.register-container .register-subtitle {
+  color: #58606b;
+  text-align: center;
+}
+.register-container .register-login-link {
+  color: #58606b;
+}

@@ -1,0 +1,36 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="DTOs\Response\Account\**" />
+    <Compile Remove="DTOs\Response\TradingViewGraph\**" />
+    <EmbeddedResource Remove="DTOs\Response\Account\**" />
+    <EmbeddedResource Remove="DTOs\Response\TradingViewGraph\**" />
+    <None Remove="DTOs\Response\Account\**" />
+    <None Remove="DTOs\Response\TradingViewGraph\**" />
+  </ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="AutoMapper" Version="13.0.1" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="8.0.8" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
+		<PackageReference Include="NetcodeHub.Packages.Extensions.LocalStorage" Version="1.0.0" />
+		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.1.0" />
+		<PackageReference Include="System.Linq.Dynamic.Core" Version="1.4.9" />
+	</ItemGroup>
+	
+  <ItemGroup>
+    <ProjectReference Include="..\Domain\Domain.csproj" />
+  </ItemGroup>
+	
+  <ItemGroup>
+    <Folder Include="DTOs\Common\" />
+  </ItemGroup>
+
+</Project>

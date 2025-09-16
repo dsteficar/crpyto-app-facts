@@ -1,0 +1,132 @@
+﻿@page "/login"
+
+@using WebAdminUI.Components.Pages.Account
+@using WebAdminUI.Services.Accounts
+
+@inject IAccountClientService AccountClientService
+
+@model LoginModel
+@{
+    ViewData["Title"] = "Login";
+    string emailRegex = "[^@ \\t\\r\\n]+@[^@ \\t\\r\\n]+\\.[^@ \\t\\r\\n)]+";
+    string passwordRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^\\da-zA-Z]).{8,15}$";
+}
+
+@* <form method="post" asp-page="./Login">
+    @Html.AntiForgeryToken()
+    <label for="Email">Email:</label>
+    <input type="email" id="Email" name="Email" required />
+
+    <label for="Password">Password:</label>
+    <input type="password" id="Password" name="Password" required />
+
+    <button type="submit">Login</button>
+</form> *@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <base href="/" />
+    <link href="css/main.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+</head>
+
+<body style="margin: 0px;">
+
+    <div class="login-container">
+        <div class="login-card">
+            <div class="header-container">
+                <p class="login-header">Administration</p>
+                <p class="login-subtitle">Login with your admin credentials</p>
+            </div>
+            <div class="icon-container">
+                <img src="images/icons/login-user-icon.png" alt="Login User Icon" class="login-user-icon" />
+            </div>
+            <form method="post" asp-page="./Login">
+                @Html.AntiForgeryToken()
+                <div class="form-group">
+                    <label for="email" class="form-label">Username</label>
+                    <div class="input-group">
+                        <input type="email"
+                               id="email"
+                               name="email"
+                               placeholder="Enter your username"
+                               class="form-control form-control-login"
+                               required
+                               pattern=@emailRegex
+                               title="Invalid Email Address format." />
+                        <span class="input-icon">
+                            <i class="material-icons">account_circle</i>
+                        </span>
+                    </div>
+                    <small class="helper-text">Please enter your email address</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="password" class="form-label">Password</label>
+                    <div class="input-group">
+                        <input type="password"
+                               id="password"
+                               name="password"
+                               placeholder="Enter your password"
+                               class="form-control form-control-login"
+                               minlength="8"
+                               maxlength="15"
+                               required
+                               pattern=@passwordRegex
+                               title="Password must be between 8 and 15 characters and contain at least one lowercase letter, one uppercase letter, one numeric digit, and one special character." />
+                        <button type="button" onclick="togglePassword()" class="toggle-password-btn">
+                            <i class="material-icons">visibility</i>
+                        </button>
+                    </div>
+                    <small class="helper-text">Password must meet the requirements.</small>
+                </div>
+
+                <div id="error-alert" class="alert warning hidden">
+                    Invalid username or password.
+                </div>
+
+                <button type="submit" class="button-submit">Login</button>
+
+                <div class="login-register-link">
+                    Don't have an account? <a href="/register">Register</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</body>
+
+</html>
+
+<script>
+    function togglePassword() {
+        const passwordInput = document.getElementById("password");
+        const toggleBtn = document.querySelector(".toggle-password-btn i");
+
+        if (passwordInput.type === "password") {
+            passwordInput.type = "text";
+            toggleBtn.textContent = "visibility_off";
+        } else {
+            passwordInput.type = "password";
+            toggleBtn.textContent = "visibility";
+        }
+    }
+
+    function handleLogin(event) {
+        event.preventDefault(); // Prevent default form submission
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+
+        if (email && password) {
+            console.log("Login submitted with", { email, password });
+            // Simulate login or call your backend API
+        } else {
+            document.getElementById("error-alert").classList.remove("hidden");
+        }
+    }
+</script>

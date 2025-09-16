@@ -1,0 +1,61 @@
+﻿/* Main Graph Container */
+.graph {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 1rem;
+    width: 100%;
+    padding: 10px;
+}
+
+/* First Column (Graph Options + Trading View Graph) */
+.graph__column--first {
+    display: flex;
+    flex-direction: column;
+    flex: 4;
+    max-width: 75%;
+}
+
+/* Second Column (Graph Rules) */
+.graph__column--second {
+    flex: 1;
+    max-width: 25%;
+    display: flex;
+    flex-direction: column;
+    height: 700px;
+}
+
+/* Graph Options Container */
+.graph__options {
+    background-color: var(--background-secondary-color);
+    color: var(--text-color);
+    border: 2px solid var(--border-primary-color);
+    border-radius: 15px;
+    margin-bottom: 20px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* Trading View Graph Container */
+.graph__trading-view {
+    height: 600px;
+    background-color: var(--background-secondary-color);
+    color: var(--text-color);
+    border: 2px solid var(--border-primary-color);
+    border-radius: 15px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Graph Rules Container */
+.graph__rules {
+    background-color: var(--background-secondary-color);
+    color: var(--text-color);
+    border: 2px solid var(--border-primary-color);
+    border-radius: 15px;
+    padding: 20px;
+    height: 100%;
+}

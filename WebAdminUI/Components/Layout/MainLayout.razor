@@ -1,0 +1,70 @@
+﻿@using Application.Contracts.Services
+@using System.Security.Claims
+@using Domain.Entity.Users
+@using WebAdminUI.Common.AppTheme
+@using WebAdminUI.Services.Users
+@using WebAdminUI.States
+@inherits LayoutComponentBase
+
+@inject IUserPreferencesService PreferencesService
+@inject AuthenticationStateProvider AuthStateProvider
+@inject IJSRuntime JSRuntime
+@inject IUserSettingsService UserSettingsService;
+
+<div class="page" data-theme="@CurrentTheme">
+    <div class="sidebar">
+        <NavMenu />
+    </div>
+
+    <main>
+        <article class="content px-4">
+            @if (IsInitialized)
+            {
+                @Body
+            }
+            else
+            {
+                <p>Loading...</p> <!-- Placeholder while loading -->
+            }
+        </article>
+    </main>
+</div>
+
+<div id="blazor-error-ui">
+    An unhandled error has occurred.
+    <a href="" class="reload">Reload</a>
+    <a class="dismiss">🗙</a>
+</div>
+
+
+@code {
+    private string CurrentTheme = string.Empty;
+    private UserSettings UserSettings = null!;
+    private bool IsInitialized = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var customAuthStateProvider = (CustomAuthenticationStateProvider)AuthStateProvider;
+        var authState = await customAuthStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.IsInRole("Anonymous"))
+        {
+            NavManager.NavigateTo("/login");
+        }
+
+        var emailClaim = user.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email);
+
+        if (emailClaim == null) return;
+
+        var getUserSettingsResult = await UserSettingsService.GetByUserEmail(emailClaim.Value);
+
+        if (!getUserSettingsResult.IsSuccess) return;
+
+        UserSettings = getUserSettingsResult.Value;
+
+        CurrentTheme = UserSettings.Theme;
+
+        IsInitialized = true;
+    }
+}

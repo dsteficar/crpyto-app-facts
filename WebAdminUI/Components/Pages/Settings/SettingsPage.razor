@@ -1,0 +1,20 @@
+﻿@page "/settings"
+
+@using Application.Contracts.Services
+@using WebAdminUI.States
+
+@inject IJSRuntime JSRuntime
+@inject IUserSettingsService UserSettingsService
+@inject AuthenticationStateProvider AuthStateProvider
+
+@* @rendermode InteractiveServer *@
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+@* @attribute [StreamRendering] *@
+
+<PageTitle>Settings</PageTitle>
+
+Welcome to your new app.
+
+@* <RadzenCheckBox TValue="bool" @bind-Value="IsDarkTheme" Change="ToggleThemeAsync" /> *@
+<RadzenCheckBox TValue="bool" Value="IsDarkTheme" Change="ToggleThemeAsync" />
+<label>@(IsDarkTheme ? "Dark Theme" : "Light Theme")</label>

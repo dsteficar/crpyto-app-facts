@@ -1,0 +1,70 @@
+﻿@using WebApplicationUI.Services.TradingBots
+@inject ITradingBotLogService LogService
+
+@code {
+    private List<LogEntry> logs = new();
+    private bool isConnected = false;
+
+    [Parameter]
+    public string BotId { get; set; } = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        LogService.LogReceived += OnLogReceived;
+
+        if (!string.IsNullOrEmpty(BotId))
+        {
+            await LogService.Connect(BotId);
+            isConnected = true;
+        }
+    }
+
+    private void OnLogReceived(string log)
+    {
+        logs.Add(new LogEntry
+            {
+                Timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
+                Message = log
+            });
+
+        InvokeAsync(StateHasChanged); // Update UI in real-time
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        LogService.LogReceived -= OnLogReceived;
+
+        if (isConnected && !string.IsNullOrEmpty(BotId))
+        {
+            await LogService.Disconnect(BotId);
+        }
+    }
+
+    private class LogEntry
+    {
+        public string Timestamp { get; set; } = string.Empty;
+        public string Message { get; set; } = string.Empty;
+    }
+}
+
+<div class="p-4">
+    <h3>Logs for Bot: @BotId</h3>
+
+    @if (!isConnected)
+    {
+        <p>Connecting to logs...</p>
+    }
+    else if (logs.Count == 0)
+    {
+        <p>No logs available yet.</p>
+    }
+    else
+    {
+        <RadzenDataGrid Data="@logs" TItem="LogEntry" ColumnWidth="200px" Style="height: 500px; overflow-y: auto;">
+            <Columns>
+                <RadzenDataGridColumn TItem="LogEntry" Property="Timestamp" Title="Timestamp" />
+                <RadzenDataGridColumn TItem="LogEntry" Property="Message" Title="Log Message" />
+            </Columns>
+        </RadzenDataGrid>
+    }
+</div>

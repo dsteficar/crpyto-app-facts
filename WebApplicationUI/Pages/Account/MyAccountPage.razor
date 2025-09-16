@@ -1,0 +1,118 @@
+﻿@page "/my-account"
+
+@using Microsoft.AspNetCore.Components.Authorization
+@using System.Security.Claims
+@using WebApplicationUI.States
+
+
+@inject NavigationManager navManager;
+
+<PageTitle>TradingView Graph Overview</PageTitle>
+
+<style>
+    /* Centering the container */
+    .centered-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 90vh;
+        background-color: var(--background-primary-color);
+    }
+
+    /* Inner container styling */
+    .inner-container {
+        background-color: var(--background-secondary-color);
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        width: 400px;
+        border: 2px solid var(--border-primary-color);
+    }
+
+    /* User icon styling */
+    .icon-container {
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .small-icon {
+        width: 100px;
+        height: 100px;
+    }
+
+    /* Fields container styling */
+    .fields-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+    }
+
+    .field {
+        margin-bottom: 15px;
+        width: 100%; /* Adjust field width */
+        max-width: 350px; /* Restrict max width */
+    }
+
+    .submit-button {
+        width: 50%;
+        max-width: 350px;
+        margin-top: 10px;
+    }
+
+    .rz-button.rz-primary.rz-shade-default {
+        background-color: var(--button-primary-color);
+    }
+
+    .rz-form-field-label:last-child {
+        inset-inline-end: 0;
+    }
+
+    .rz-form-field.rz-variant-text .rz-form-field-content{
+        border-color: transparent;
+        box-shadow: none;
+        --rz-input-background-color: transparent;
+        --rz-input-border-radius: 0;
+        --rz-input-padding-block: 0.4375rem;
+        --rz-input-padding-inline: 0;
+        --rz-numeric-input-padding-block: 0.5rem 0.5rem;
+        --rz-numeric-input-padding-inline: 0 1.25rem;
+        --rz-text-area-padding-block: 0.4375rem;
+        --rz-text-area-padding-inline: 0;
+        --rz-form-field-label-padding: var(--rz-form-field-text-label-padding);
+    }
+
+</style>
+
+<div class="centered-container">
+    <div class="inner-container">
+        <div class="fields-container">
+            <RadzenStack Gap="1rem" class="rz-p-sm-12 rz-w-100">
+                <div class="icon-container">
+                    <RadzenImage Path="icons/login-user-icon.png"
+                                 class="login-user-icon small-icon"
+                                 AlternateText="Login User Icon" />
+                </div>
+                <RadzenFormField Text="Name" Variant="Variant.Text">
+                    <ChildContent>
+                        <RadzenTextBox @bind-Value="NameField" Placeholder="Enter your new name" class="field" />
+                    </ChildContent>
+                </RadzenFormField>
+                <RadzenFormField Text="Email" Variant="Variant.Text">
+                    <ChildContent>
+                        <RadzenTextBox @bind-Value="EmailField" Placeholder="Enter your new email" class="field" />
+                    </ChildContent>
+                </RadzenFormField>
+                <RadzenFormField Text="Binance API Key" Variant="Variant.Text">
+                    <ChildContent>
+                        <RadzenPassword @bind-Value="BinanceAPIKeyField" Placeholder="Enter your new Binance API key" class="field" />
+                    </ChildContent>
+                </RadzenFormField>
+            </RadzenStack>
+            <RadzenStack Gap="1rem" AlignItems="AlignItems.Center" class="rz-w-100">
+                <RadzenButton Text="Submit" Click="OnSubmit" class="submit-button" />
+                <RadzenButton Text="Change password" Click="NavigateToChangePassword" class="submit-button" />
+            </RadzenStack>
+        </div>
+    </div>
+</div>

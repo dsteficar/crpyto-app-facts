@@ -1,0 +1,226 @@
+﻿@page "/trade-bots/manage/{id:int?}"
+
+@using Application.DTOs.TradeBots.Requests
+@using AutoMapper
+@using Domain.Enums
+@using System.Security.Claims
+@using WebApplicationUI.Models.Trading.Bots
+@using WebApplicationUI.Services.TradingBots
+
+@inject NavigationManager NavManager
+@inject ITradingBotClientService TradeBotClientService
+@inject IMapper Mapper
+
+<style>
+    .page-title {
+        text-align: center;
+        margin-bottom: 5px;
+    }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr); /* Allow a maximum of 3 fieldsets per row */
+        gap: 20px; /* Adds spacing between fieldsets */
+        padding: 4px;
+    }
+
+    .fieldset {
+        width: 100%; /* Let the grid determine the width */
+        min-width: 300px; /* Ensure minimum width */
+        box-sizing: border-box;
+        background-color: var(--background-secondary-color);
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        border: 2px solid var(--border-primary-color);
+    }
+
+    .form-row {
+        display: flex;
+        flex-direction: column; /* Ensures label is above input */
+        gap: 5px; /* Adds spacing between label and input */
+        margin-bottom: 15px; /* Optional: Adds spacing between rows */
+    }
+
+    .checkbox-label {
+        margin-left: 5px;
+        vertical-align: middle;
+    }
+
+    .action-buttons {
+        text-align: center;
+        margin-top: 10px;
+        padding-bottom: 10px;
+    }
+
+    .trade-bot-form {
+        background-color: #252525;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        border: 2px solid var(--border-primary-color);
+        height: auto; /* Allow height to adjust */
+        padding-left: 2%;
+        padding-right: 2%;
+        overflow-x: hidden; /* Prevent horizontal overflow */
+        overflow-y: auto; /* Enable vertical scrolling */
+    }
+
+    .rz-colorpicker, .rz-lookup-search input, .rz-numeric, .rz-datepicker > .rz-inputtext, .rz-multiselect, .rz-dropdown, .mask, .rz-textarea, .rz-textbox {
+        height: var(--rz-input-height);
+        line-height: var(--rz-input-line-height);
+        color: var(--rz-input-value-color);
+        font-family: inherit;
+        font-size: var(--rz-input-font-size);
+        transition: var(--rz-input-transition);
+        outline: none;
+        background-color: #25282c;
+    }
+
+    /* Media Query for Smaller Screens */
+    @@media (max-width: 1024px) {
+        .form-grid {
+            grid-template-columns: repeat(2, 1fr); /* Reduce to 2 fieldsets per row */
+        }
+    }
+
+    /* Media Query for Small Screens */
+    @@media (max-width: 768px) {
+        .form-grid {
+            grid-template-columns: 1fr; /* Single column layout */
+        }
+
+        .fieldset {
+            margin: 0 auto; /* Center the fieldsets */
+        }
+
+        .trade-bot-form {
+            padding: 10px; /* Add some padding for smaller screens */
+            overflow-y: auto; /* Allow scrolling */
+        }
+    }
+
+    /* Media Query for Extra Small Screens (Phones) */
+    @@media (max-width: 480px) {
+        .trade-bot-form {
+            height: 100vh; /* Utilize full screen height */
+            padding: 5px;
+        }
+
+        .fieldset {
+            margin-bottom: 20px; /* Add spacing between fieldsets */
+        }
+    }
+
+</style>
+
+<div class="trade-bot-form">
+    <h3 class="page-title">@(isEditMode ? "Edit Trade Bot" : "Add New Trade Bot")</h3>
+
+    <RadzenTemplateForm Data="@FormModel" Submit="@((TradingBotEditFormModel model) => { Submit(model); })">
+        <div class="form-grid">
+            <RadzenFieldset Text="Bot Details" class="fieldset">
+                <div class="form-row">
+                    <RadzenLabel Text="Bot Name:" Component="Name" />
+                    <RadzenTextBox @bind-Value="FormModel.Name" Placeholder="Enter bot name" Style="width: 100%;" id="Name" class="trade-bot-form-input-field" />
+                </div>
+                <div class="form-row">
+                    <RadzenLabel Text="Enabled:" Component="IsEnabled" />
+                    <RadzenCheckBox @bind-Value="FormModel.IsEnabled" id="IsEnabled" />
+                </div>
+            </RadzenFieldset>
+
+            <RadzenFieldset Text="Market Configuration" class="fieldset">
+                <div class="form-row">
+                    <RadzenLabel Text="Market Type:" Component="MarketType" />
+                    <RadzenDropDown Data="@MarketTypes" @bind-Value="FormModel.MarketType" ValueProperty="Value"
+                                    TextProperty="Name" Placeholder="Select Market Type" Style="width: 100%;" id="MarketType" />
+                </div>
+                <div class="form-row">
+                    <RadzenLabel Text="Market Direction:" Component="MarketDirection" />
+                    <RadzenDropDown Data="@MarketDirections" @bind-Value="FormModel.MarketDirection" ValueProperty="Value"
+                                    TextProperty="Name" Placeholder="Select Market Direction" Style="width: 100%;" id="MarketDirection" />
+                </div>
+                <div class="form-row">
+                    <RadzenLabel Text="Channel Structure:" Component="ChannelStructureType" />
+                    <RadzenDropDown Data="@ChannelStructures" @bind-Value="FormModel.ChannelStructureType" ValueProperty="Value"
+                                    TextProperty="Name" Placeholder="Select Channel Structure" Style="width: 100%;" id="ChannelStructureType" />
+                </div>
+                <div class="form-row">
+                    <RadzenLabel Text="Channel Infinity Type:" Component="ChannelInfinityType" />
+                    <RadzenDropDown Data="@ChannelInfinities" @bind-Value="FormModel.ChannelInfinityType" ValueProperty="Value"
+                                    TextProperty="Name" Placeholder="Select Channel Infinity Type" Style="width: 100%;" id="ChannelInfinityType" />
+                </div>
+            </RadzenFieldset>
+
+            <RadzenFieldset Text="Assets" class="fieldset">
+                <div class="form-row">
+                    <RadzenLabel Text="Base Asset:" Component="BaseAsset" />
+                    <RadzenTextBox @bind-Value="FormModel.BaseAsset" Placeholder="Enter base asset" Style="width: 100%;" id="BaseAsset" />
+                </div>
+                <div class="form-row">
+                    <RadzenLabel Text="Quote Asset:" Component="QuoteAsset" />
+                    <RadzenTextBox @bind-Value="FormModel.QuoteAsset" Placeholder="Enter quote asset" Style="width: 100%;" id="QuoteAsset" />
+                </div>
+            </RadzenFieldset>
+
+            <RadzenFieldset Text="Precision and Slot Configuration" class="fieldset">
+                <div class="form-row">
+                    <RadzenLabel Text="Price Precision:" Component="PricePrecision" />
+                    <RadzenNumeric @bind-Value="FormModel.PricePrecision" Placeholder="Enter price precision" Style="width: 100%;" id="PricePrecision" />
+                </div>
+                <div class="form-row">
+                    <RadzenLabel Text="Quantity Precision:" Component="QuantityPrecision" />
+                    <RadzenNumeric @bind-Value="FormModel.QuantityPrecision" Placeholder="Enter quantity precision" Style="width: 100%;" id="QuantityPrecision" />
+                </div>
+                <div class="form-row">
+                    <RadzenLabel Text="Slot Size:" Component="SlotSize" />
+                    <RadzenNumeric @bind-Value="FormModel.SlotSize" Placeholder="Enter slot size" Style="width: 100%;" id="SlotSize" />
+                </div>
+            </RadzenFieldset>
+
+            <RadzenFieldset Text="Channel and Stop Configurations" class="fieldset">
+                <div class="form-row">
+                    <RadzenLabel Text="Starting Price:" Component="StartingChannelPrice" />
+                    <RadzenNumeric @bind-Value="FormModel.StartingChannelPrice" Placeholder="Enter starting channel price" Style="width: 100%;" id="StartingChannelPrice" />
+                </div>
+                <div class="form-row">
+                    <RadzenLabel Text="Ending Price:" Component="EndingChannelPrice" />
+                    <RadzenNumeric @bind-Value="FormModel.EndingChannelPrice" Placeholder="Enter ending channel price" Style="width: 100%;" id="EndingChannelPrice" />
+                </div>
+                <div class="form-row">
+                    <RadzenLabel Text="Stop Loss Price:" Component="StopLossPrice" />
+                    <RadzenNumeric @bind-Value="FormModel.StopLossPrice" Placeholder="Enter stop loss price" Style="width: 100%;" id="StopLossPrice" />
+                </div>
+                <div class="form-row">
+                    <RadzenLabel Text="Trigger Price:" Component="TriggerPrice" />
+                    <RadzenNumeric @bind-Value="FormModel.TriggerPrice" Placeholder="Enter trigger price" Style="width: 100%;" id="TriggerPrice" />
+                </div>
+            </RadzenFieldset>
+
+            <RadzenFieldset Text="Quantity and Orders" class="fieldset">
+                <div class="form-row">
+                    <RadzenLabel Text="Quantity Type:" Component="QuantityType" />
+                    <RadzenDropDown Data="@QuantityTypes" @bind-Value="FormModel.QuantityType" ValueProperty="Value"
+                                    TextProperty="Name" Placeholder="Select Quantity Type" Style="width: 100%;" id="QuantityType" />
+                </div>
+                <div class="form-row">
+                    <RadzenLabel Text="Quantity Per Slot:" Component="QuantityPerSlot" />
+                    <RadzenNumeric @bind-Value="FormModel.QuantityPerSlot" Placeholder="Enter quantity per slot" Style="width: 100%;" id="QuantityPerSlot" />
+                </div>
+                <div class="form-row">
+                    <RadzenLabel Text="Number Of Slots:" Component="NumberOfSlots" />
+                    <RadzenNumeric @bind-Value="FormModel.NumberOfSlots" Placeholder="Enter number of slots" Style="width: 100%;" id="NumberOfSlots" />
+                </div>
+                <div class="form-row">
+                    <RadzenLabel Text="Slot Type:" Component="TradeBotSlotTypes" />
+                    <RadzenDropDown Data="@TradeBotSlotTypes" @bind-Value="FormModel.SlotType" ValueProperty="Value"
+                                    TextProperty="Name" Placeholder="Select Slot Type" Style="width: 100%;" id="SlotType" />
+                </div>
+            </RadzenFieldset>
+        </div>
+
+        <div class="action-buttons">
+            <RadzenButton Text="Save" ButtonType="ButtonType.Submit" Style="margin-right: 10px; width:100px; height: 40px;" />
+            <RadzenButton Text="Cancel" Click="Cancel" Style="width:100px; height: 40px;" />
+        </div>
+    </RadzenTemplateForm>
+</div>

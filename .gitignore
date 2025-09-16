@@ -1,0 +1,71 @@
+# .gitignore for Microsoft Visual Studio with Blazor WASM, Blazor Server, and Web API projects
+
+# Ignore build and deployment artifacts
+bin/
+obj/
+
+# Ignore user-specific files
+.vscode/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.userprefs
+
+# Ignore logs
+*.log
+*.tlog
+*.log1
+*.log2
+*.svclog
+
+# Ignore publish output
+publish/
+# wwwroot/
+
+# Ignore NuGet Packages
+*.nupkg
+packages/
+*.snupkg
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# Ignore Rider/JetBrains files (if applicable)
+.idea/
+*.sln.iml
+
+# Ignore Mac specific files
+.DS_Store
+.vscode/settings.json
+
+# Ignore the Blazor specific artifacts
+*.dll
+dist/
+node_modules/
+npm-debug.log
+yarn-error.log
+scopedcss/
+# wwwroot/css/
+
+# Ignore EF Core migrations (optional, if generated)
+# Migrations/
+
+# Ignore by Visual Studio Code (if using VS Code)
+.vscode/
+.vs/
+
+# Ignore sensitive files
+# appsettings.json
+# appsettings.*.json
+
+# Ignore Coverage output
+coverage/
+
+# Ignore database files
+*.mdf
+*.ldf
+*.sqlite
+
+# Ignore dependency caching by package managers
+node_modules/

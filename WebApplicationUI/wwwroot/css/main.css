@@ -1,0 +1,149 @@
+﻿.rz-g > div, .rz-datalist-data > li {
+  background-color: var(--background-secondary-color);
+  color: var(--text-color);
+  border: 2px solid var(--border-primary-color);
+  border-radius: 10px;
+  background-color: var(--background-primary-color);
+  padding: 5px;
+}
+
+.rz-card.rz-variant-outlined {
+  border: none;
+  color: var(--text-color);
+}
+
+.rz-pager {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--rz-pager-gap);
+  flex-wrap: unset;
+  background-color: transparent;
+  padding: 0px;
+}
+
+.rz-pager-page.rz-state-active {
+  background-color: var(--button-secondary-color);
+  color: #ffffff;
+  border: var(--rz-pager-numeric-button-selected-border);
+  padding: var(--rz-pager-numeric-button-selected-padding);
+}
+
+.rz-html-editor-dropdown-items, .rz-splitbutton-menu, .rz-autocomplete-panel, .rz-multiselect-panel, .rz-dropdown-panel {
+  position: absolute;
+  background-color: var(--background-secondary-color);
+  border-radius: var(--rz-input-border-radius);
+  border: var(--rz-dropdown-panel-border);
+  box-shadow: var(--rz-dropdown-panel-shadow);
+}
+
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f5f5f5;
+  background-image: url("/images/adminpanel-background.jpg");
+  background-size: cover;
+  background-position: center;
+}
+
+.login-container .login-card {
+  background-color: #0d1114;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 0 8px rgb(255, 255, 255);
+  width: 100%;
+  max-width: 400px;
+  margin: 5%;
+}
+
+.login-container .login-form-label .rz-form-field-label {
+  color: #8a99a1; /* Or any color you prefer */
+}
+
+.login-container .form-control:focus {
+  background-color: #0d1114 !important;
+  border-color: #ffcfc1 !important;
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem rgba(255, 109, 65, 0.25);
+}
+
+.login-container .rz-textbox:focus ~ .rz-form-field-label, .login-container .rz-textarea:focus ~ .rz-form-field-label, .login-container .rz-spinner:focus-within ~ .rz-form-field-label, .login-container .rz-autocomplete:focus-within ~ .rz-form-field-label {
+  color: #4f96c2 !important;
+}
+
+.login-container .rz-state-focused .rz-form-field-label, .login-container .rz-variant-filled.rz-state-focused .rz-form-field-label, .login-container .rz-variant-flat.rz-state-focused .rz-form-field-label {
+  color: #3a474d;
+}
+
+.login-container .valid.modified:not([type=checkbox]) {
+  outline: 0px solid #33688c;
+}
+
+.login-container input:-webkit-autofill,
+.login-container input:-webkit-autofill:hover,
+.login-container input:-webkit-autofill:focus,
+.login-container textarea:-webkit-autofill,
+.login-container textarea:-webkit-autofill:hover,
+.login-container textarea:-webkit-autofill:focus,
+.login-container select:-webkit-autofill,
+.login-container select:-webkit-autofill:hover,
+.login-container select:-webkit-autofill:focus {
+  border: 3px solid #0d1114 !important;
+  -webkit-text-fill-color: #ffffff !important;
+  -webkit-box-shadow: 0 0 0px 1000px #0d1114 inset !important;
+  transition: background-color 5000s ease-in-out 0s !important;
+}
+
+.login-container .login-header {
+  color: #ffffff;
+  text-align: center;
+}
+
+.login-container .icon-account {
+  color: #4f96c2 !important;
+  margin-right: 0.25em;
+}
+
+.login-container .icon-password {
+  color: #4f96c2 !important;
+  padding-top: 10px;
+}
+
+.login-container .button-submit {
+  width: 100%;
+  color: #ffffff;
+  background-color: #33688c !important;
+}
+
+.login-container .form-control-login {
+  color: #ffffff !important;
+}
+
+.login-container .validator-helper {
+  color: #4f96c2;
+  padding-top: 10px;
+}
+
+.login-container .rz-alert.rz-warning.rz-shade-lighter {
+  --rz-alert-background-color: rgb(107 42 47) !important;
+  --rz-alert-color: #ffffff !important;
+  --rz-alert-title-color: #b12c2c !important;
+  --rz-alert-icon-color: #ff0000 !important;
+}
+
+.login-container .login-user-icon {
+  width: 100px;
+  height: 100px;
+}
+
+.login-container .login-subtitle {
+  color: #58606b;
+  text-align: center;
+}
+
+.login-container .login-register-link {
+  color: #58606b;
+}

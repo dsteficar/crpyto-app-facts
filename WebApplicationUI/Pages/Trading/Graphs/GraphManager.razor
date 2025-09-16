@@ -1,0 +1,93 @@
+﻿@page "/tradingview-graph-overview"
+
+@using Application.DTOs.ParallelChannel.Requests
+@using WebApplicationUI.Services.Binance
+@using WebApplicationUI.Services.TradingViewGraph
+
+@inject IJSRuntime jsRuntime
+@inject ITradingViewGraphClientService tradingViewGraphClientService
+@inject NavigationManager navManager;
+@implements IAsyncDisposable
+
+
+<PageTitle>TradingView Graph Overview</PageTitle>
+
+<h3 class="view-component-title">Binance Real-Time TradingView Chart</h3>
+
+@* <script src="js/binance-chart.js"></script> *@
+
+<div class="graph">
+    <!-- First column: Graph options and trading view graph -->
+    <div class="graph__column--first">
+        <!-- Graph options -->
+        <div class="graph__options">
+            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Start" Gap="0.5rem">
+                <RadzenLabel Text="Futures Pair" Component="DropDownBindValue" />
+                <RadzenDropDown TValue="string" Value=@_selectedFuturesPair Data=@_futuresPairs Style="width: 100%; max-width: 400px;" Change="OnFuturesPairChanged" />
+
+                <RadzenLabel Text="Time Interval" Component="DropDownBindValue" />
+                <RadzenDropDown TValue="string" Value=@_selectedTimeInterval Data=@_timeIntervals Style="width: 100%; max-width: 200px;" Change="OnTimeIntervalChanged" />
+
+                <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" AlignItems="AlignItems.Center" Gap="0.5rem" Style="flex-grow: 1;">
+                    <RadzenButton ButtonStyle="ButtonStyle.Success" Icon="add_circle" Text="Draw" id="drawParallelChannelButton" />
+                    <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete" Text="Delete" id="deleteParallelChannelButton" />
+@*                     <RadzenButton ButtonStyle="ButtonStyle.Warning" Icon="delete" Text="Save channels" Click="SaveChannels" /> No more all save channels button! *@
+                </RadzenStack>
+            </RadzenStack>
+        </div>
+
+        <!-- Trading view graph -->
+        <div class="graph__trading-view">
+            <h3 class="view-component-title">Trading view graph</h3>
+            <div id="chart" style="">
+                <span id="chart-loading-text">Loading data...</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Second column: Graph rules -->
+    <div class="graph__column--second">
+        <div class="graph__rules">
+            <h4 class="view-component-title">Parallel channels</h4>
+
+            <RadzenPager Density="@channelPageDensity" HorizontalAlign="HorizontalAlign.Center" Count="_count" 
+                PageSize="@_userParallelChannelPageSize" PageNumbersCount="3" PageChanged="@ParallelChannelPageChanged"/>
+
+            <RadzenDataList AllowVirtualization=false
+                            WrapItems=true AllowPaging=false IsLoading=@_isLoading LoadData=@LoadUserParallelChannelData
+                            Data="@_userParallelChannelList" Count=@_count TItem="GetParallelChannelDTO">
+                <Template Context="product">
+                    <RadzenCard Variant="Variant.Outlined" class="rz-p-0" Style="width: 100%; overflow: hidden;">
+                        <RadzenRow Gap="0">
+                            <RadzenColumn Size="12" SizeLG="12" class="rz-p-1">
+                                <RadzenRow Gap="0">
+                                    <RadzenColumn Size="4" SizeMD="4" SizeLG="4">
+                                        <RadzenText Style="font-size: 11px; color: #e7d01c">Point #1</RadzenText>
+                                        <RadzenText Style="font-size: 10px; color: var(--text-color)">@(product.Price1)</RadzenText>
+                                        <RadzenText Style="font-size: 10px; color: var(--text-color)">@(product.Timestamp1)</RadzenText>
+                                    </RadzenColumn>
+                                    <RadzenColumn Size="4" SizeMD="4" SizeLG="4">
+                                        <RadzenText Style="font-size: 11px; color: #e7d01c">Point #2</RadzenText>
+                                        <RadzenText Style="font-size: 10px; color: var(--text-color)">@(product.Price2)</RadzenText>
+                                        <RadzenText Style="font-size: 10px; color: var(--text-color)">@(product.Timestamp2)</RadzenText>
+                                    </RadzenColumn>
+
+                                    <RadzenColumn Size="4" SizeMD="4" SizeLG="4">
+                                        <RadzenText Style="font-size: 11px; color: #e7d01c">Point #3</RadzenText>
+                                        <RadzenText Style="font-size: 10px; color: var(--text-color)">@(product.Price3)</RadzenText>
+                                        <RadzenText Style="font-size: 10px; color: var(--text-color)">@(product.Timestamp3)</RadzenText>
+                                    </RadzenColumn>
+                                </RadzenRow>
+                            </RadzenColumn>
+                            <RadzenColumn Size="12" SizeLG="12" class="rz-p-2">
+                                <RadzenButton Text="View channel" Style="width: 100%; background-color: var(--button-secondary-color)" Click="() => CenterOnChannel(product.Timestamp1, product.Timestamp2)" />
+                            </RadzenColumn>
+                        </RadzenRow>
+                    </RadzenCard>
+                </Template>
+            </RadzenDataList>
+        </div>
+    </div>
+</div>
+
+

@@ -1,0 +1,17 @@
+﻿[
+  {
+    "outputFile": "wwwroot/css/main.css",
+    "inputFile": "wwwroot/css/scss/main.scss",
+    "minify": {
+      "enabled": false
+    }
+  },
+  {
+    "outputFile": "wwwroot/css/scss/components/_graph-manager.css",
+    "inputFile": "wwwroot/css/scss/components/_graph-manager.scss"
+  },
+  {
+    "outputFile": "wwwroot/css/scss/components/_login.css",
+    "inputFile": "wwwroot/css/scss/components/_login.scss"
+  }
+]

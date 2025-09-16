@@ -1,0 +1,70 @@
+﻿@page "/login"
+
+@using Application.DTOs
+@using Application.DTOs.Account.Responses
+@using Application.DTOs.Account.Requests
+@using Application.DTOs.Response
+@using Microsoft.AspNetCore.Components.Authorization
+@using WebAdminUI.Services.Accounts
+@using WebApplicationUI.Services.JwtTokens
+@using WebApplicationUI.States
+
+@layout NoLayout
+
+@inject IJSRuntime jsRuntime
+@inject IAccountClientService accountClientService
+@inject IJwtTokenClientService tokenClientService
+@inject NavigationManager NavManager
+
+<link href="css/main.css" rel="stylesheet">
+
+<PageTitle>Login Page</PageTitle>
+
+<div class="login-container">
+    <div class="login-card">
+        <div class="rz-p-2">
+            <RadzenText TextStyle="TextStyle.H6" TagName="TagName.P" class="login-header">Administration</RadzenText>
+            <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.P" class="login-subtitle">Login with your admin credentials</RadzenText>
+        </div>
+        <RadzenStack AlignItems="AlignItems.Center" Style="margin-bottom: -2rem;">
+            <RadzenImage Path="icons/login-user-icon.png" class="login-user-icon" AlternateText="Login User Icon" />
+        </RadzenStack>
+        <RadzenTemplateForm Data="@loginModel" TItem="LoginRequestDTO" Submit="@HandleLogin">
+            <RadzenStack Gap="1rem" class="rz-p-sm-12">
+                <RadzenFormField Text="Account" Variant="Variant.Text" class="login-form-label">
+                     <ChildContent>
+                        <RadzenTextBox Name="EmailAddress" @bind-Value="@loginModel.EmailAddress" class="form-control form-control-login" Placeholder="Enter your username" />
+                     </ChildContent>
+                     <End>
+                        <RadzenIcon Icon="account_circle" class="icon-account" />
+                     </End>
+                     <Helper>
+                        <RadzenRequiredValidator Component="EmailAddress" Text="@emailReqValidationMessage" class="validator-helper" />
+                        <RadzenRegexValidator Component="EmailAddress" Pattern="@emailRegex" Text="@emailRgxValidationMessage" class="validator-helper" />
+                     </Helper>
+                </RadzenFormField>
+                <RadzenFormField Text="Password" Variant="Variant.Text" class="login-form-label">
+                    <ChildContent>
+                        <RadzenPassword Name="Password" @bind-Value="loginModel.Password" Placeholder="Enter your password" class="form-control form-control-login" Visible="@hidePassword" />
+                        <RadzenTextBox Name="Password" @bind-Value="@loginModel.Password" Visible="@(!hidePassword)" class="form-control form-control-login" />
+                    </ChildContent>
+                    <End>
+                        <RadzenButton Icon="@(hidePassword ? "visibility" : "visibility_off")" Click="TogglePassword" Variant="Variant.Text" Size="ButtonSize.Small" class="icon-password" />
+                    </End>
+                    <Helper>
+                        <RadzenRequiredValidator Component="Password" Text="@passwordReqValidationMessage" class="validator-helper" />
+                        <RadzenRegexValidator Component="Password" Pattern="@passwordRegex" Text="@passwordRgxValidationMessage" class="validator-helper" />
+                    </Helper>
+                </RadzenFormField>
+                <RadzenAlert AlertStyle="AlertStyle.Warning" Variant="Variant.Flat" Shade="Shade.Lighter" @bind-Visible="showAlertMessage">
+                    @errorMessage
+                </RadzenAlert>
+                <RadzenButton ButtonType="ButtonType.Submit" Text="Login" class="button-submit" />
+                <div class="login-register-link text-center mt-3">
+                    Don't have an account?
+                    <RadzenLink Path="/register" Text="Register" />
+                </div>
+            </RadzenStack>
+        </RadzenTemplateForm>
+    </div>
+</div>
